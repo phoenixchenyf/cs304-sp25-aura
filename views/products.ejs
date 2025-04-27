@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.css">
+    <title>Jewelry Collection</title>
+</head>
+<body>
+
+<header>
+    <h1>Aura Jewelry Collection</h1>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/profile">Profile</a>
+        <a href="/products">Jewelry Collection</a>
+        <a href="/logout">Logout</a>
+    </nav>
+</header>
+
+<main>
+    <h2>Explore Our Stunning Jewelry Collection</h2>
+
+    <div class="product-list">
+        <% products.forEach(function(product) { %>
+            <div class="product-card">
+                <img src="<%= product.image_url %>" alt="<%= product.name %>" />
+                <h3><%= product.name %></h3>
+                <p>Price: $<%= product.price %></p>
+                <p><strong>Material:</strong> <%= product.Material %></p>
+                <p><strong>Usage:</strong> <%= product.usage %></p>
+                <p><strong>Associated Zodiac Signs:</strong> <%= product.associated_zodiac_signs.join(', ') %></p>
+                <a href="/product/<%= product.item_id %>">View Details</a>
+            </div>
+        <% }) %>
+    </div>
+</main>
+
+</body>
+</html>
