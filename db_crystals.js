@@ -1,5 +1,3 @@
-
-
 const crystals = [
   {
     item_id: 1,
