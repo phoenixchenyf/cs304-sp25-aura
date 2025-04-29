@@ -159,11 +159,24 @@ async function loadCrystals(db) {
     return result;
 }
 
+async function deleteCrystals(db) {
+  let deleted = await db
+    .collection("crystals")
+    .deleteMany({}); 
+
+  return deleted;
+}
+
 async function main() {
   console.log('starting function check...\n');
+
   const aura = await Connection.open(mongoUri, 'aura');
+
+  deleted = await deleteCrystals(aura);  
+  console.log('Deleted:', deleted);
+
   let crystals = await loadCrystals(aura);
-  console.log(crystals);
+  console.log('Loaded Crystals:', crystals);
 
   await Connection.close();
 }
