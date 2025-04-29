@@ -132,3 +132,40 @@ const crystals = [
     Arrival_time: new Date("2025-02-12T10:00:00.000Z")
   }
 ];
+
+// todo: replace myDBName with your username string ("og102", for example) in line 14
+// todo: complete all query functions (1-11)
+// todo: fill in the rest of the "main" function with calls to each respective query function and console.logs of their results
+// todo: run this file to check your output with "node (filename.js)", replacing (filename.js) with your own file name
+
+const path = require('path');
+require("dotenv").config({ path: path.join(process.env.HOME, '.cs304env')});
+const { Connection } = require('./connection');
+const cs304 = require('./cs304');
+const { title, mainModule } = require('process');
+const { generatePrimeSync } = require('crypto');
+const { count } = require('console');
+const { long } = require('webidl-conversions');
+
+const mongoUri = cs304.getMongoUri();
+
+// REPLACE WITH YOUR OWN USERNAME ("og102", for example)
+const myDBName = "sl118";
+
+async function loadCrystals(db) {
+  let result = await db
+    .collection("crystals")
+    .insertMany(crystals)
+    return result;
+}
+
+async function main() {
+  console.log('starting function check...\n');
+  const aura = await Connection.open(mongoUri, 'aura');
+  let crystals = await loadCrystals(aura);
+  console.log(crystals);
+
+  await Connection.close();
+}
+
+main().catch(console.error);
