@@ -69,7 +69,7 @@ app.get('/crystals', async (req, res) => {
 
     // Render the crystals.ejs template with the items array
     return res.render('crystals.ejs', { items });
-});
+});  
 
 // ================================================================
 // postlude
