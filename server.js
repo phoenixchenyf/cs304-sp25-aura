@@ -45,8 +45,6 @@ app.use(cookieSession({
 
 const DB = process.env.USER;
 const ACCESSORY_DB = 'accessoryCollection';
-const USER_DB = 'userCollection';
-const REVIEWS_DB = 'reviewsCollection';
 const CRYSTALS_DB = 'crystals';
 
 // Home page: display jewelry collection
@@ -65,9 +63,9 @@ app.get('/', async (req, res) => {
 
 // Displays crystals
 app.get('/crystals', async (req, res) => {
-    // Fetch crystal products from the db_crystals.js database
-    const db = await Connection.open(mongoUri, CRYSTALS_DB); // Use CRYSTALS_DB for the crystals collection
+    const db = await Connection.open(mongoUri, "aura");
     let items = await db.collection('crystals').find({}).toArray();
+    console.log(items.length);
 
     // Render the crystals.ejs template with the items array
     return res.render('crystals.ejs', { items });
