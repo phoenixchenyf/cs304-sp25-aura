@@ -13,6 +13,7 @@ const multer = require('multer');
 const { Connection } = require('./connection');
 const cs304 = require('./cs304');
 const { keyword } = require('color-convert');
+const { keyword } = require('color-convert');
 
 // Create and configure the app
 const app = express();
@@ -114,6 +115,7 @@ app.get('/crystals/search', async (req, res) => {
     const db = await Connection.open(mongoUri, "aura");
     const items = await keywordSearch(db, keyword);
     console.log(`Matched items: ${items.length}`);
+
     return res.render('crystals.ejs', {items, keyword});
 });  
 
