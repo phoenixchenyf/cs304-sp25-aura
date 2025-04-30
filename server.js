@@ -45,7 +45,29 @@ app.use(cookieSession({
 
 const DB = process.env.USER;
 const ACCESSORY_DB = 'accessoryCollection';
-const CRYSTALS_DB = 'crystals';
+const crystals = 'crystals';
+
+//==================================================================
+//functions
+async function keywordSearch(db, keyword) {
+    let key = new RegExp(keyword, "i");
+    let matched = await db
+    .collection("crystals")
+    .find({
+      $or: [
+        { type: { $regex: key } },
+        { Material: { $regex: key } },
+        { usage: { $regex: key } },
+        { color: { $regex: key } },
+        {associated_zodiac_signs:{$regex: key}}
+      ]
+    })
+    .sort({ item_id: 1 }) 
+    .toArray();
+  
+  return matched;
+}
+//============================================================
 
 // Home page: display jewelry collection
 app.get('/', async (req, res) => {
@@ -55,7 +77,7 @@ app.get('/', async (req, res) => {
     req.session.visits = visits;
 
     // Fetch a sample of jewelry items from the database
-    const db = await Connection.open(mongoUri, ACCESSORY_DB);
+    const db = await Connection.open(mongoUri, "aura");
     let items = await db.collection(ACCESSORY_DB).find({}).limit(10).toArray();
 
     return res.render('index.ejs', {uid, visits, items});
@@ -68,8 +90,18 @@ app.get('/crystals', async (req, res) => {
     console.log(items.length);
 
     // Render the crystals.ejs template with the items array
-    return res.render('crystals.ejs', { items });
+    return res.render('crystals.ejs', {items});
 });  
+
+//keyword search
+app.get('/crystals/search', async (req, res) => {
+    const keyword = req.query.keyword || "";
+    const db = await Connection.open(mongoUri, "aura");
+    const items = await keywordSearch(db, keyword);
+    console.log(`Matched items: ${items.length}`);
+
+    return res.render('crystals.ejs', {items});
+}); 
 
 // ================================================================
 // postlude     
