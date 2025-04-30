@@ -12,6 +12,7 @@ const multer = require('multer');
 // our modules loaded from cwd
 const { Connection } = require('./connection');
 const cs304 = require('./cs304');
+const { keyword } = require('color-convert');
 
 // Create and configure the app
 const app = express();
@@ -83,24 +84,29 @@ app.get('/', async (req, res) => {
     return res.render('index.ejs', {uid, visits, items});
 });
 
+var searchForm = {
+  keyword : "green"
+};
+
 // Displays crystals
 app.get('/crystals', async (req, res) => {
+    const keyword = ""; 
     const db = await Connection.open(mongoUri, "aura");
     let items = await db.collection('crystals').find({}).toArray();
     console.log(items.length);
 
     // Render the crystals.ejs template with the items array
-    return res.render('crystals.ejs', {items});
+    return res.render('crystals.ejs', {items, keyword});
 });  
+
 
 //keyword search
 app.get('/crystals/search', async (req, res) => {
-    const keyword = req.query.keyword || "";
+    const keyword = searchForm.keyword;
     const db = await Connection.open(mongoUri, "aura");
     const items = await keywordSearch(db, keyword);
     console.log(`Matched items: ${items.length}`);
-
-    return res.render('crystals.ejs', {items});
+    res.render('crystals.ejs', {items, keyword});
 }); 
 
 // ================================================================
