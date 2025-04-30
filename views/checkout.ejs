@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout - Aura</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-pink-50 text-gray-800 font-sans">
+
+    <header class="bg-white shadow-md py-6 px-8 flex justify-between items-center">
+        <h1 class="text-3xl font-bold text-pink-600">Aura</h1>
+        <nav class="space-x-4">
+            <a href="/" class="text-gray-700 hover:text-pink-500 font-medium">Home</a>
+            <a href="/profile" class="text-gray-700 hover:text-pink-500 font-medium">Profile</a>
+            <a href="/products" class="text-gray-700 hover:text-pink-500 font-medium">Jewelry</a>
+            <a href="/crystals" class="text-gray-700 hover:text-pink-500 font-medium">Crystals</a>
+            <a href="/login" class="bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600 transition">
+                Login
+            </a>
+        </nav>
+    </header>
+
+    <main class="max-w-4xl mx-auto py-10 px-4">
+        <h2 class="text-2xl font-semibold mb-6">Your Shopping Cart</h2>
+    
+        <% if (items.length === 0) { %>
+            <p>Your cart is empty.</p>
+        <% } else { %>
+            <div class="grid gap-6 mb-6">
+                <% items.forEach(item => { %>
+                    <div class="bg-white p-4 rounded shadow flex items-center justify-between">
+                        <div class="flex items-center">
+                            <img src="<%= item.Image_url %>" class="w-24 h-24 object-cover rounded mr-4">
+                            <div>
+                                <h3 class="text-lg font-semibold"><%= item.Material %> - <%= item.type %></h3>
+                                <p class="text-pink-600 font-bold mb-2">$<%= item.price %> × <%= item.qty %></p>
+                                <form action="/cart/remove/<%= item.item_id %>" method="POST">
+                                    <button class="px-2 py-1 bg-red-500 text-white rounded">Remove One</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>                
+            </div>
+    
+            <div class="text-right">
+                <p class="text-xl font-bold">Total: $<%= total %></p>
+                <form action="/cart/place-order" method="POST">
+                    <button type="submit" class="mt-4 bg-pink-500 text-white px-6 py-2 rounded hover:bg-pink-600 transition">
+                        Place Order
+                    </button>
+                </form>                
+            </div>
+        <% } %>
+    </main>
+
+    <script>
+        $(document).ready(function() {
+            $('.remove-from-cart').click(function() {
+                const itemId = $(this).data('id');
+    
+                $.ajax({
+                    url: `/cart/remove/${itemId}`,
+                    method: 'POST',
+                    success: function(data) {
+                        $('#cart-count').text(data.cartCount); // Update cart icon count
+                        location.reload(); // Refresh cart item list and total
+                    },
+                    error: function(err) {
+                        console.error('Failed to remove item:', err);
+                    }
+                });
+            });
+        });
+    </script>    
+    
+
+    <footer class="bg-white text-center py-6 mt-10 text-gray-500 text-sm">
+        &copy; <%= new Date().getFullYear() %> Aura — Personalized Jewelry, Aligned with Your Energy
+    </footer>
+</body>
+</html>

@@ -11,42 +11,29 @@
 </head>
 
 <body>
-    <div class="profile-container">
-      <h1><%= name %>'s Profile</h1>
-  
-      <div class="userInfo">
-        <h2>Birthday</h2>
-        <p id="birthday"><%= birthday%></p>
-      </div>
-  
-      <div class="orderHistory">
-        <h2>Past Orders</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Order #</th>
-              <th>Date</th>
-              <th>Items</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>#1001</td>
-              <td>2024-12-01</td>
-              <td>3 Items</td>
-              <td>$45.99</td>
-            </tr>
-            <tr>
-              <td>#1002</td>
-              <td>2025-01-20</td>
-              <td>2 Items</td>
-              <td>$29.50</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+  <header>
+      <h1>Your Aura Profile</h1>
+      <nav>
+          <a href="/">Home</a>
+          <a href="/profile">Profile</a>
+          <a href="/products">Jewelry Collection</a>
+          <a href="/logout">Logout</a>
+      </nav>
+  </header>
+
+  <main>
+      <h2>Welcome, <%= user.user_name %>!</h2>
+
+      <form action="/profile/update" method="POST">
+          <label for="birthday">Birthday:</label>
+          <input type="date" id="birthday" name="birthday" value="<%= user.birthday %>" required>
+          
+          <label for="preferences">Preferences:</label>
+          <textarea id="preferences" name="preferences" rows="4" cols="50"><%= user.preferences %></textarea>
+
+          <button type="submit">Update Profile</button>
+      </form>
+  </main>
 </body>
 
 </html>
