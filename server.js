@@ -411,7 +411,7 @@ app.get('/', async (req, res) => {
     //update session visit count
     visits++;
     req.session.visits = visits;
-    return res.render('index.ejs', {username, visits, items});
+    return res.render('index.ejs', {username, visits});
 });
 
 // Collections page -- display crystals
