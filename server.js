@@ -405,9 +405,9 @@ async function getUser(usernm) {
 // Home page: display jewelry collection
 app.get('/', async (req, res) => {
     //get session username
-    let username = req.session.username || null;\
+    let username = req.session.username || null;
     //get session visit count
-    let visits = req.session.visits || 0;\
+    let visits = req.session.visits || 0;
     //update session visit count
     visits++;
     req.session.visits = visits;
