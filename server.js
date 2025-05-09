@@ -68,10 +68,6 @@ app.set('view engine', 'ejs');
 
 const DB = process.env.USER;
 const mongoUri = cs304.getMongoUri();
-const ACCESSORY_DB = 'accessoryCollection';
-const crystals = 'crystals';
-const USERS_COLLECTION = 'users';
-
 
 //==================================================================
 // User log in and log out
