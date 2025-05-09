@@ -34,7 +34,7 @@
     <main class="max-w-6xl mx-auto py-10 px-4">
         <h2 class="text-2xl font-semibold mb-6">Explore Our Crystal Collection</h2>
 
-        <form class="flex flex-wrap gap-4 mb-8" id="searchForm" method="GET" action="/crystals/find">
+        <form class="flex flex-wrap gap-4 mb-8" id="searchForm" method="GET" action="/crystals">
             <input type="text" name="keyword" id="searchInput" placeholder="green necklace..." 
                    value="<%= keyword %>" 
                    class="border px-4 py-2 rounded w-full md:w-1/3">
@@ -58,6 +58,14 @@
                 <option value="Pendant" <%= type === 'Pendant' ? 'selected' : '' %>>Pendant</option>
                 <option value="Ring" <%= type === 'Ring' ? 'selected' : '' %>>Ring</option>
             </select>
+            <p>Your Zodiac Sign: <%= zodiac %></p>
+
+            <% if (zodiac) { %>
+                <button type="submit" name="zodiacRec" value="<%= zodiacRec ? '' : zodiac %>" class="bg-indigo-500 text-white px-4 py-2 rounded">
+                    <%= zodiacRec ? 'Show All Crystals' : 'Show ' + zodiac + ' Recommendations' %>
+                </button>
+            <% } %>
+
         </form>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 item">
@@ -70,11 +78,11 @@
                 data-usage="<%= item.usage %>"
                 data-zodiac="<%= item.associated_zodiac_signs.join(',') %>">
 
-                    <img src="<%= item.Image_url %>" alt="<%= item.material %>" class="w-full h-48 object-cover">
+                    <img src="<%= item.Image_url %>" alt="<%= item.material %>" style="width: 200px; height: auto; display: block; margin: 0 auto;">
                     <div class="p-4">
                         <h3 class="text-lg font-semibold mb-2"><%= item.type.charAt(0).toUpperCase() + item.type.slice(1) %> - <%= item.color %></h3>
                         <p class="text-pink-600 font-bold mb-3">$<%= item.price %></p>
-                        <p class="text-gray-700 mb-2"><strong>Material:</strong> <%= item.material %></p>
+                        <p class="text-gray-700 mb-2"><strong>Material:</strong> <%= item.Material %></p>
                         <p class="text-gray-700 mb-2"><strong>Usage:</strong> <%= item.usage %></p>
                         <p class="text-gray-700 mb-2"><strong>Associated Zodiac Signs:</strong> <%= item.associated_zodiac_signs.join(', ') %></p>
                         <p class="text-gray-700 mb-2"><strong>Arrival Time:</strong> <%= new Date(item.Arrival_time).toLocaleDateString() %></p>

@@ -18,6 +18,9 @@ const cs304 = require('./cs304');
 // Create and configure the app
 const app = express();
 
+// use files from the local directory at the /images url path
+app.use('/images', express.static('images')); 
+
 // Middleware for session management
 app.use(session({
   secret: 'secret-key',
@@ -83,7 +86,7 @@ app.use((req, res, next) => {
 // Route to render the login page (GET)
 // Route to handle login form submission (POST)
 app.post("/login", async (req, res) => {
-  const { username, password } = req.body;
+  const {username, password} = req.body;
 
   // Verify user credentials
   const success = await verifyUser(username, password);
@@ -94,6 +97,16 @@ app.post("/login", async (req, res) => {
 
   // If login is successful, store the username in the session
   req.session.username = username;
+
+  //get user with session stored username
+  const user = await getUser(req.session.username);
+
+  // Store the full user object for later use
+  req.session.user = {
+    id: user._id,
+    dob: user.dob // required for zodiac
+  };
+
   req.flash("info", "Successfully logged in.");
   res.redirect("/profile"); // Redirect to profile page after successful login
 });
@@ -194,11 +207,21 @@ app.get("/profile", requiresLogin, async (req, res) => {
 
 //==================================================================
 //functions
+/**
+ * This function fetches the items in the backend that aligns with the specified
+ * keyword listed in the order specified by the sorting option
+ * Then it returns the ones that matches the type filter (type of jewelry)
+ * @param {database} db 
+ * @param {keyword} keyword 
+ * @param {type of jewelry} type 
+ * @param {sorting mechanism} sort 
+ * @returns an array of products that aligns wth the provided keyword,
+ * type, and sorted in the specified ways
+ */
 async function keywordSearch(db, keyword, type, sort) {
   const key = new RegExp(keyword, "i");
-  const typeRegex = new RegExp(type, "i");
 
-  // Build the $or keyword search condition
+  // find items in the collection with keyword search
   const query = {
     $or:[
       {type: { $regex: key}},
@@ -209,15 +232,15 @@ async function keywordSearch(db, keyword, type, sort) {
     ]
   };
 
-    // Set sort options
-    let sortOption = {item_id: 1}; // default sort
-    if (sort === 'priceLowHigh') {
-      sortOption = {price: 1};
-    } else if (sort === 'priceHighLow') {
-      sortOption = {price: -1};
-    }
+  // Set sort options
+  let sortOption = {item_id: 1}; // default : sort by item_id
+  if (sort === 'priceLowHigh') {
+    sortOption = {price: 1};
+  } else if (sort === 'priceHighLow') {
+    sortOption = {price: -1};
+  }
 
-  // Perform everything in one MongoDB call
+  // find and sort items in Mongodb 
   const matched = await db.collection("crystals")
     .find(query)
     .sort(sortOption)
@@ -232,10 +255,34 @@ async function keywordSearch(db, keyword, type, sort) {
   return filtered;
 }
 
-function zodiacSign(user){
-  const bday = user.dob;
+/**
+ * This function takes in the database name and a zodiac sign and returns the 
+ * matched items based on the zodiac sign in the crystals collection in MongoDB
+ * @param {database} db 
+ * @param {String} zodiac 
+ * @returns jewelry documents with specified zodiac in the crystals collection
+ */
+async function matchZodiac(db, zodiac) {
+  const zodi = new RegExp(zodiac, "i");
+  //find item in mongodb
+  const zodiacMatched = await db
+    .collection("crystals")
+    .find({associated_zodiac_signs:{$regex:zodi}})
+    .toArray();
+
+  return zodiacMatched;
+}
+
+/**
+ * This function takes in a date string and returns the corresponding zodiac sign
+ * @param {date} dateString 
+ * @returns string zodiac sign
+ */
+function zodiacSign(dateString){
+  let bday = new Date(dateString);
   let month = bday.getMonth();
   let date = bday.getDate();
+
   if (month == 0){
       if (date < 20){
           return 'capricorn';
@@ -341,45 +388,74 @@ function zodiacSign(user){
   }
 }
 
+/**
+ * This function gets stored user information (id and dob) in mongodb when a user logs in
+ * @param {username} usernm 
+ * @returns user document
+ */
+async function getUser(usernm) {
+  const username = new RegExp(usernm);
+  const db = await Connection.open(mongoUri, "aura"); 
+  const user = await db.collection("users").findOne({username: username});
+  return user;
+}
 
 //============================================================
 
 // Home page: display jewelry collection
 app.get('/', async (req, res) => {
-    let username = req.session.username || null;
-    let visits = req.session.visits || 0;
+    //get session username
+    let username = req.session.username || null;\
+    //get session visit count
+    let visits = req.session.visits || 0;\
+    //update session visit count
     visits++;
     req.session.visits = visits;
-
-    // Fetch a sample of jewelry items from the database
-    const db = await Connection.open(mongoUri, "aura");
-    let items = await db.collection(ACCESSORY_DB).find({}).limit(10).toArray();
-
     return res.render('index.ejs', {username, visits, items});
 });
 
-
-// Displays crystals
+// Collections page -- display crystals
 app.get('/crystals', async (req, res) => {
+    //get all data
     const keyword = req.query.keyword || '';
     const type = req.query.type || '';
     const sort = req.query.sort || '';
+    const zodiacRec = req.query.zodiacRec || '';
     const db = await Connection.open(mongoUri, "aura");
-    let items = await db.collection('crystals').find({}).toArray();
-    // const items = await keywordSearch(db, keyword, type, sort);
-    console.log(items.length);
-
+    const username = req.session.username || null;
+    const user = req.session.user || null;
+    //debug -- used to check whether the correct user is logged in
+    console.log('Session user:', req.session.user);
     // Ensure session cart exists
     if (!req.session.cart) {
         req.session.cart = [];
     }
-
     const cartCount = req.session.cart.length;
+    //set zodiac to null at first
+    let zodiac = null;
+    //change zodiac with user information
+    if (user && user.dob) {
+      zodiac = zodiacSign(user.dob);
+    }
+
+    //show all items at first
+    let items = await db.collection('crystals').find({}).toArray();
+    //if user puts in keywords, type options, or sort options
+    //show searched or sorted items instead
+    if (keyword || type || sort){
+      items = await keywordSearch(db, keyword, type, sort);
+    }
+
+    //if user click on zodiacRec, show recommendations based on zodiac sign
+    if (zodiacRec) {
+      items = await matchZodiac(db, zodiac);
+    }
+  
+    // const items = await keywordSearch(db, keyword, type, sort);
+    console.log(items.length);
 
     // Render the crystals.ejs template with the items array
-    const username = req.session.username || null;
-    return res.render('crystals.ejs', {items, keyword, cartCount, username, type, sort});
-
+    return res.render('crystals.ejs', {items, keyword, cartCount, zodiac, username, type, sort, zodiacRec});
 });  
 
 
@@ -401,17 +477,18 @@ app.post('/cart/add/:id', (req, res) => {
 app.post('/cart/remove/:id', (req, res) => {
     const idToRemove = parseInt(req.params.id);
     const cart = req.session.cart || [];
-
+    //use item_id to find target item in cart
     const index = cart.findIndex(item => item.item_id === idToRemove);
+    //if found, delete and update count
     if (index !== -1) {
         cart[index].qty -= 1;
         if (cart[index].qty <= 0) {
             cart.splice(index, 1); // remove completely
         }
     }
-
     req.session.cart = cart;
 
+    //update sum
     const cartCount = cart.reduce((sum, item) => sum + item.qty, 0);
     res.json({ cartCount }); // respond with updated count
 });
@@ -423,6 +500,7 @@ app.get('/cart', async (req, res) => {
     const ids = cart.map(item => item.item_id);
     const itemsFromDB = await db.collection('crystals').find({ item_id: { $in: ids } }).toArray();
 
+    //show added items in cart
     const items = itemsFromDB.map(dbItem => {
         const match = cart.find(c => c.item_id === dbItem.item_id);
         return {
@@ -431,6 +509,7 @@ app.get('/cart', async (req, res) => {
         };
     });
 
+    //calculate cart price
     const total = items.reduce((sum, item) => sum + item.price * item.qty, 0);
     res.render('checkout.ejs', { items, total });
 });
@@ -468,45 +547,6 @@ app.post('/cart/place-order', async (req, res) => {
 
     res.render('place_order.ejs', { items, total });
 });
-
-//search sort filter
-app.get('/crystals/find', async (req, res) => {
-  const keyword = req.query.keyword || '';
-  const type = req.query.type || '';
-  const sort = req.query.sort || '';
-  const db = await Connection.open(mongoUri, "aura");
-  const items = await keywordSearch(db, keyword, type, sort)
-  console.log(`Matched items: ${items.length}`);
-  // Ensure session cart exists
-  if (!req.session.cart) {
-    req.session.cart = [];
-  }
-
-  const cartCount = req.session.cart.length;
-  res.render('crystals.ejs', {items, keyword, type, sort, cartCount});
-}); 
-
-app.get('/zodiac', async (req, res) => {
-const uid = req.session.uid;
-const db = await Connection.open(mongoUri, "aura");
-// Get user
-const user = await db.collection("users").findOne({_id: uid});
-if (!user || !user.dob) {
-  return res.status(400).send("User or birth date not found.");
-}
-const zodiac = zodiacSign(user)
-// Find products matched to zodiac
-const recommendedItems = await db
-  .collection("crystals")
-  .find({associated_zodiac_signs: {$regex: new RegExp(zodiac, 'i')}})
-  .toArray();
-
-res.render("zodiac.ejs", {user, zodiac, recommendedItems});
-});
-
-
-
-
 
 // ================================================================
 // postlude     

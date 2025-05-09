@@ -7,7 +7,7 @@ const crystals = [
     Material: "amethyst crystal",
     usage: "calming energy, inner peace, spiritual development",
     associated_zodiac_signs: ["Pisces", "Virgo", "Aquarius", "Capricorn"],
-    Image_url: "https://media.hswstatic.com/eyJidWNrZXQiOiJjb250ZW50Lmhzd3N0YXRpYy5jb20iLCJrZXkiOiJnaWZcL2NyeXN0YWxzLTIuanBnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo4Mjh9LCJ0b0Zvcm1hdCI6ImF2aWYifX0=",
+    Image_url: "/images/01.jpg",
     Arrival_time: new Date("2025-01-10T10:00:00.000Z")
   },
   {
@@ -18,7 +18,7 @@ const crystals = [
     Material: "green aventurine",
     usage: "luck, abundance, emotional balance",
     associated_zodiac_signs: ["Taurus", "Aries", "Leo"],
-    Image_url: "https://media.hswstatic.com/eyJidWNrZXQiOiJjb250ZW50Lmhzd3N0YXRpYy5jb20iLCJrZXkiOiJnaWZcL2NyeXN0YWxzLTMuanBnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo4Mjh9LCJ0b0Zvcm1hdCI6ImF2aWYifX0=",
+    Image_url: "/images/green.jpg",
     Arrival_time: new Date("2025-01-15T12:00:00.000Z")
   },
   {
@@ -29,7 +29,7 @@ const crystals = [
     Material: "lapis lazuli",
     usage: "communication, intuition, inner strength",
     associated_zodiac_signs: ["Sagittarius", "Libra"],
-    Image_url: "https://media.hswstatic.com/eyJidWNrZXQiOiJjb250ZW50Lmhzd3N0YXRpYy5jb20iLCJrZXkiOiJnaWZcL2NyeXN0YWxzLTQuanBnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo4Mjh9LCJ0b0Zvcm1hdCI6ImF2aWYifX0=",
+    Image_url:"/images/03.jpg",
     Arrival_time: new Date("2025-01-20T11:30:00.000Z")
   },
   {
@@ -40,7 +40,7 @@ const crystals = [
     Material: "tiger's eye",
     usage: "courage, self-esteem, confidence",
     associated_zodiac_signs: ["Capricorn", "Leo"],
-    Image_url: "https://media.hswstatic.com/eyJidWNrZXQiOiJjb250ZW50Lmhzd3N0YXRpYy5jb20iLCJrZXkiOiJnaWZcL2NyeXN0YWxzLTUuanBnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo4Mjh9LCJ0b0Zvcm1hdCI6ImF2aWYifX0=",
+    Image_url: "/images/04.jpg",
     Arrival_time: new Date("2025-01-25T09:45:00.000Z")
   },
   {
@@ -51,7 +51,7 @@ const crystals = [
     Material: "rose quartz",
     usage: "love, compassion, emotional healing",
     associated_zodiac_signs: ["Taurus", "Libra"],
-    Image_url: "https://media.hswstatic.com/eyJidWNrZXQiOiJjb250ZW50Lmhzd3N0YXRpYy5jb20iLCJrZXkiOiJnaWZcL2NyeXN0YWxzLTYuanBnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo4Mjh9LCJ0b0Zvcm1hdCI6ImF2aWYifX0=",
+    Image_url: "/images/05.jpg",
     Arrival_time: new Date("2025-01-30T14:00:00.000Z")
   },
   {
@@ -62,7 +62,7 @@ const crystals = [
     Material: "clear quartz",
     usage: "amplification, clarity, spiritual growth",
     associated_zodiac_signs: ["All signs"],
-    Image_url: "https://media.hswstatic.com/eyJidWNrZXQiOiJjb250ZW50Lmhzd3N0YXRpYy5jb20iLCJrZXkiOiJnaWZcL2NyeXN0YWxzLTcuanBnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo4Mjh9LCJ0b0Zvcm1hdCI6ImF2aWYifX0=",
+    Image_url: "/images/06.jpg",
     Arrival_time: new Date("2025-02-01T16:00:00.000Z")
   },
   {
@@ -73,7 +73,7 @@ const crystals = [
     Material: "labradorite",
     usage: "psychic abilities, insight, clarity",
     associated_zodiac_signs: ["Scorpio", "Leo"],
-    Image_url: "https://media.hswstatic.com/eyJidWNrZXQiOiJjb250ZW50Lmhzd3N0YXRpYy5jb20iLCJrZXkiOiJnaWZcL2NyeXN0YWxzLTguanBnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo4Mjh9LCJ0b0Zvcm1hdCI6ImF2aWYifX0=",
+    Image_url: "/images/07.jpg",
     Arrival_time: new Date("2025-02-03T10:30:00.000Z")
   },
   {
@@ -84,7 +84,7 @@ const crystals = [
     Material: "citrine",
     usage: "positivity, confidence, success",
     associated_zodiac_signs: ["Gemini", "Leo"],
-    Image_url: "https://media.hswstatic.com/eyJidWNrZXQiOiJjb250ZW50Lmhzd3N0YXRpYy5jb20iLCJrZXkiOiJnaWZcL2NyeXN0YWxzLTkuanBnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo4Mjh9LCJ0b0Zvcm1hdCI6ImF2aWYifX0=",
+    Image_url: "/images/08.jpg",
     Arrival_time: new Date("2025-02-05T11:00:00.000Z")
   },
   {
@@ -95,7 +95,7 @@ const crystals = [
     Material: "malachite",
     usage: "personal growth, emotional healing, transformation",
     associated_zodiac_signs: ["Scorpio", "Capricorn"],
-    Image_url: "https://media.hswstatic.com/eyJidWNrZXQiOiJjb250ZW50Lmhzd3N0YXRpYy5jb20iLCJrZXkiOiJnaWZcL2NyeXN0YWxzLTEwLmpwZyIsImVkaXRzIjp7InJlc2l6ZSI6eyJ3aWR0aCI6ODI4fSwidG9Gb3JtYXQiOiJhdmlmIn19",
+    Image_url: "/images/09.jpg",
     Arrival_time: new Date("2025-02-07T13:00:00.000Z")
   },
   {
@@ -106,7 +106,7 @@ const crystals = [
     Material: "selenite",
     usage: "cleansing, purification, meditation",
     associated_zodiac_signs: ["Taurus", "Cancer"],
-    Image_url: "https://media.hswstatic.com/eyJidWNrZXQiOiJjb250ZW50Lmhzd3N0YXRpYy5jb20iLCJrZXkiOiJnaWZcL2NyeXN0YWxzLTExLmpwZyIsImVkaXRzIjp7InJlc2l6ZSI6eyJ3aWR0aCI6ODI4fSwidG9Gb3JtYXQiOiJhdmlmIn19",
+    Image_url: "/images/10.jpg",
     Arrival_time: new Date("2025-02-10T08:00:00.000Z")
   },
   {
@@ -117,7 +117,7 @@ const crystals = [
     Material: "black tourmaline",
     usage: "protection, purification, stability",
     associated_zodiac_signs: ["Capricorn", "Scorpio"],
-    Image_url: "https://media.hswstatic.com/eyJidWNrZXQiOiJjb250ZW50Lmhzd3N0YXRpYy5jb20iLCJrZXkiOiJnaWZcL2NyeXN0YWxzLTEyLmpwZyIsImVkaXRzIjp7InJlc2l6ZSI6eyJ3aWR0aCI6ODI4fSwidG9Gb3JtYXQiOiJhdmlmIn19",
+    Image_url: "/images/11.jpg",
     Arrival_time: new Date("2025-02-11T15:30:00.000Z")
   },
   {
@@ -128,7 +128,7 @@ const crystals = [
     Material: "carnelian",
     usage: "vitality, courage, creativity",
     associated_zodiac_signs: ["Aries", "Leo"],
-    Image_url: "https://media.hswstatic.com/eyJidWNrZXQiOiJjb250ZW50Lmhzd3N0YXRpYy5jb20iLCJrZXkiOiJnaWZcL2NyeXN0YWxzLTEzLmpwZyIsImVkaXRzIjp7InJlc2l6ZSI6eyJ3aWR0aCI6ODI4fSwidG9Gb3JtYXQiOiJhdmlmIn19",
+    Image_url: "/images/12.jpg",
     Arrival_time: new Date("2025-02-12T10:00:00.000Z")
   }
 ];
@@ -146,6 +146,7 @@ const { title, mainModule } = require('process');
 const { generatePrimeSync } = require('crypto');
 const { count } = require('console');
 const { long } = require('webidl-conversions');
+const { getEnvironmentData } = require('worker_threads');
 
 const mongoUri = cs304.getMongoUri();
 
@@ -163,7 +164,6 @@ async function deleteCrystals(db) {
   let deleted = await db
     .collection("crystals")
     .deleteMany({}); 
-
   return deleted;
 }
 

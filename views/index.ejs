@@ -8,11 +8,11 @@
 
   <style>
     html, body {
-      min-height: 100%;
+      height: 100%;
       margin: 0;
       display: flex;
       flex-direction: column;
-    }
+    }   
 
     body {
       background-image: url('https://res.cloudinary.com/jerrick/image/upload/d_642250b563292b35f27461a7.png,f_jpg,fl_progressive,q_auto,w_1024/s7n5th08arx2qpwcsqcq.jpg');
@@ -20,7 +20,6 @@
       background-repeat: no-repeat;
       background-position: center;
     }
-
     main {
       flex: 1;
     }
@@ -31,73 +30,61 @@
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-      transition: transform 0.2s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     .glass-card:hover {
       transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
     }
   </style>
-
 </head>
+
+<body class="text-gray-800 font-sans">
 
   <!-- Header -->
-</head>
-<body>
+  <header class="bg-white/90 shadow-md py-6 px-6 sm:px-8 flex justify-between items-center backdrop-blur">
+    <h1 class="text-3xl font-bold text-pink-600">Aura</h1>
 
-    <!-- Header Section: Contains the logo, navigation links, and login/logout functionality -->
-    <header class="bg-white shadow-md py-6 px-8 flex justify-between items-center">
-      <!-- Site Title -->
-      <h1 class="text-3xl font-bold text-pink-600">Aura</h1>
+    <nav class="flex gap-4 items-center">
+      <a href="/" class="text-gray-700 hover:text-pink-500 font-medium">Home</a>
+      <a href="/profile" class="text-gray-700 hover:text-pink-500 font-medium">Profile</a>
+      <a href="/crystals" class="text-gray-700 hover:text-pink-500 font-medium">Crystals</a>
 
-      <!-- Navigation bar with links to different sections of the website -->
-      <nav class="space-x-4">
-          <a href="/" class="text-gray-700 hover:text-pink-500 font-medium">Home</a>
-          <a href="/profile" class="text-gray-700 hover:text-pink-500 font-medium">Profile</a>
-          <a href="/crystals" class="text-gray-700 hover:text-pink-500 font-medium">Crystals</a>
-          
-          <!-- Conditional Rendering for Logout or Login/Signup based on user authentication -->
-          <% if (username) { %>
-              <!-- Logout Button for authenticated users -->
-              <form action="/logout" method="POST" class="inline">
-                  <button type="submit" class="bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600 transition">
-                      Logout
-                  </button>
-              </form>
-          <% } else { %>
-              <!-- Dropdown Menu for Login/Sign Up for unauthenticated users -->
-              <div class="relative inline-block text-left">
-                  <!-- Button to toggle the dropdown -->
-                  <button id="loginDropdownButton" class="bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600 transition focus:outline-none">
-                      Login / Sign Up
-                  </button>
-
-                  <!-- Dropdown menu for login and signup options -->
-                  <div id="loginDropdownMenu" class="hidden absolute right-0 z-10 mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                      <div class="py-1">
-                          <a href="/login?form=login" class="block px-4 py-2 text-sm text-gray-700 hover:bg-pink-100">Login</a>
-                          <a href="/login?form=signup" class="block px-4 py-2 text-sm text-gray-700 hover:bg-pink-100">Sign Up</a>
-                      </div>
-                  </div>
-              </div>
-          <% } %>
-      </nav>
+      <% if (username) { %>
+        <form action="/logout" method="POST">
+          <button class="bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600 transition">Logout</button>
+        </form>
+      <% } else { %>
+        <div class="relative inline-block text-left">
+          <button id="loginDropdownButton" class="bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600 transition">
+            Login / Sign Up
+          </button>
+          <div id="loginDropdownMenu" class="hidden absolute right-0 z-10 mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+            <div class="py-1">
+              <a href="/login?form=login" class="block px-4 py-2 text-sm text-gray-700 hover:bg-pink-100">Login</a>
+              <a href="/login?form=signup" class="block px-4 py-2 text-sm text-gray-700 hover:bg-pink-100">Sign Up</a>
+            </div>
+          </div>
+        </div>
+      <% } %>
+    </nav>
   </header>
 
-  <!-- Main Content -->
-  <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+  <!-- Main content -->
+  <main class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-12">
-      <h2 class="text-4xl font-bold text-white drop-shadow-lg">Discover Jewelry That Aligns With Your Energy</h2>
-      <p class="mt-4 text-lg text-white drop-shadow">Curated with crystals and care — browse our featured pieces.</p>
+      <h2 class="text-4xl font-extrabold text-white drop-shadow-lg">Jewelry That Aligns With Your Energy</h2>
+      <p class="mt-4 text-lg text-white drop-shadow">Crystals, care, and customization — just for you.</p>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
       <% items.forEach(function(item) { %>
         <div class="glass-card overflow-hidden">
           <img src="<%= item.image_url %>" alt="<%= item.name %>" class="w-full h-48 object-cover">
           <div class="p-4">
-            <h3 class="text-xl font-semibold mb-1"><%= item.name %></h3>
-            <p class="text-pink-600 font-bold text-lg mb-2">$<%= item.price %></p>
+            <h3 class="text-xl font-semibold mb-1 text-gray-800"><%= item.name %></h3>
+            <p class="text-pink-600 font-bold text-lg mb-3">$<%= item.price %></p>
             <a href="/product/<%= item._id %>" class="inline-block bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600 transition">
               View Details
             </a>
@@ -108,26 +95,23 @@
   </main>
 
   <!-- Footer -->
-  <footer class="bg-gradient-to-t from-white/90 to-transparent text-center py-6 text-gray-700 text-sm mt-auto">
+  <footer class="bg-white/80 text-center py-6 text-gray-600 text-sm mt-auto backdrop-blur">
     &copy; <%= new Date().getFullYear() %> Aura — Personalized Jewelry, Aligned with Your Energy
   </footer>
 
-
-   <!-- jQuery Script to Toggle Login/Sign Up Dropdown -->
-   <script>
+  <!-- jQuery Dropdown Script -->
+  <script>
     $(document).ready(function () {
-        // Toggle the visibility of the dropdown menu when the button is clicked
-        $("#loginDropdownButton").click(function (e) {
-            e.preventDefault();
-            $("#loginDropdownMenu").toggleClass("hidden");
-        });
+      $("#loginDropdownButton").click(function (e) {
+        e.preventDefault();
+        $("#loginDropdownMenu").toggleClass("hidden");
+      });
 
-        // Hide the dropdown menu when clicking outside of it
-        $(document).click(function (e) {
-            if (!$(e.target).closest("#loginDropdownButton").length && !$(e.target).closest("#loginDropdownMenu").length) {
-                $("#loginDropdownMenu").addClass("hidden");
-            }
-        });
+      $(document).click(function (e) {
+        if (!$(e.target).closest("#loginDropdownButton, #loginDropdownMenu").length) {
+          $("#loginDropdownMenu").addClass("hidden");
+        }
+      });
     });
   </script>
 
