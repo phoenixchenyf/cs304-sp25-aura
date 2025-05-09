@@ -35,6 +35,7 @@
         <h2 class="text-2xl font-semibold mb-6">Explore Our Crystal Collection</h2>
 
         <form class="flex flex-wrap gap-4 mb-8" id="searchForm" method="GET" action="/crystals">
+            <label for="searchInput" class="sr-only">Search Crystals</label>
             <input type="text" name="keyword" id="searchInput" placeholder="green necklace..." 
                    value="<%= keyword %>" 
                    class="border px-4 py-2 rounded w-full md:w-1/3">
@@ -58,14 +59,13 @@
                 <option value="Pendant" <%= type === 'Pendant' ? 'selected' : '' %>>Pendant</option>
                 <option value="Ring" <%= type === 'Ring' ? 'selected' : '' %>>Ring</option>
             </select>
-            <p>Your Zodiac Sign: <%= zodiac %></p>
 
+            <p>Your Zodiac Sign: <%= zodiac %></p>
             <% if (zodiac) { %>
                 <button type="submit" name="zodiacRec" value="<%= zodiacRec ? '' : zodiac %>" class="bg-indigo-500 text-white px-4 py-2 rounded">
                     <%= zodiacRec ? 'Show All Crystals' : 'Show ' + zodiac + ' Recommendations' %>
                 </button>
             <% } %>
-
         </form>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 item">
@@ -108,36 +108,58 @@
     </footer>
 
     <script>
-    $(document).ready(function() {
-        $('.add-to-cart').click(function() {
-            const itemId = $(this).data('id');
-            $.ajax({
-                url: `/cart/add/${itemId}`,
-                method: 'POST',
-                success: function(data) {
-                    $('#cart-count').text(data.cartCount);
-                },
-                error: function(err) {
-                    console.error('Add to cart failed', err);
+    /**
+     * Flag injected from the server to indicate whether the user is logged in.
+     * This is used client-side to prevent non-authenticated users from adding items to the cart.
+     * The value is rendered by EJS using JSON.stringify.
+     */
+        const loggedIn = JSON.parse("<%- JSON.stringify(loggedIn) %>");
+        console.log(loggedIn);
+        $(document).ready(function() {
+            /**
+            * Handles the "Add to Cart" button click.
+            * Prevents action if the user is not logged in and shows an alert.
+            * If logged in, sends a POST request to add the item by ID to the cart,
+            * then updates the cart count.
+            */
+            $('.add-to-cart').click(function() {
+                if (!loggedIn) {
+                    alert('Please log in to add items to your cart.');
+                    return;
                 }
+
+                const itemId = $(this).data('id');
+                $.ajax({
+                    url: `/cart/add/${itemId}`,
+                    method: 'POST',
+                    success: function(data) {
+                        $('#cart-count').text(data.cartCount);
+                    },
+                    error: function(err) {
+                        console.error('Add to cart failed', err);
+                    }
+                });
+            });
+
+            /**
+            * Handles the "Remove from Cart" button click.
+            * Sends a POST request to remove one quantity of the selected item by ID.
+            * On success, updates the cart count.
+            */
+            $('.remove-from-cart').click(function() {
+                const itemId = $(this).data('id');
+                $.ajax({
+                    url: `/cart/remove/${itemId}`,
+                    method: 'POST',
+                    success: function(data) {
+                        $('#cart-count').text(data.cartCount);
+                    },
+                    error: function(err) {
+                        console.error('Remove from cart failed', err);
+                    }
+                });
             });
         });
-
-
-        $('.remove-from-cart').click(function() {
-            const itemId = $(this).data('id');
-            $.ajax({
-                url: `/cart/remove/${itemId}`,
-                method: 'POST',
-                success: function(data) {
-                    $('#cart-count').text(data.cartCount);
-                },
-                error: function(err) {
-                    console.error('Remove from cart failed', err);
-                }
-            });
-        });
-    });
     </script>
 </body>
 </html>

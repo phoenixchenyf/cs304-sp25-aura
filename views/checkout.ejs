@@ -7,6 +7,9 @@
 </head>
 <body class="bg-pink-50 text-gray-800 font-sans">
 
+    <!-- =======================
+         Header Navigation Bar
+    ======================== -->
     <header class="bg-white shadow-md py-6 px-8 flex justify-between items-center">
         <h1 class="text-3xl font-bold text-pink-600">Aura</h1>
         <nav class="space-x-4">
@@ -19,12 +22,19 @@
         </nav>
     </header>
 
+    <!-- =======================
+         Main Checkout Section
+         Displays cart contents and total
+    ======================== -->
     <main class="max-w-4xl mx-auto py-10 px-4">
         <h2 class="text-2xl font-semibold mb-6">Your Shopping Cart</h2>
     
+        <!-- If cart is empty, show message -->
         <% if (items.length === 0) { %>
             <p>Your cart is empty.</p>
         <% } else { %>
+
+            <!-- Render list of cart items -->
             <div class="grid gap-6 mb-6">
                 <% items.forEach(item => { %>
                     <div class="bg-white p-4 rounded shadow flex items-center justify-between">
@@ -41,6 +51,7 @@
                 <% }) %>                
             </div>
     
+            <!-- Display total and place-order button -->
             <div class="text-right">
                 <p class="text-xl font-bold">Total: $<%= total %></p>
                 <form action="/cart/place-order" method="POST">
@@ -52,6 +63,10 @@
         <% } %>
     </main>
 
+    <!-- =======================
+         Client-Side Script
+         Handles AJAX-based item removal from cart
+    ======================== -->
     <script>
         $(document).ready(function() {
             $('.remove-from-cart').click(function() {
@@ -71,8 +86,10 @@
             });
         });
     </script>    
-    
 
+    <!-- =======================
+         Page Footer
+    ======================== -->
     <footer class="bg-white text-center py-6 mt-10 text-gray-500 text-sm">
         &copy; <%= new Date().getFullYear() %> Aura — Personalized Jewelry, Aligned with Your Energy
     </footer>

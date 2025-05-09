@@ -455,10 +455,17 @@ app.get('/crystals', async (req, res) => {
     console.log(items.length);
 
     // Render the crystals.ejs template with the items array
-    return res.render('crystals.ejs', {items, keyword, cartCount, zodiac, username, type, sort, zodiacRec});
+    // return res.render('crystals.ejs', {items, keyword, cartCount, zodiac, username, type, sort, zodiacRec});
+    const loggedIn = !!req.session.username;
+    return res.render('crystals.ejs', {items, keyword, cartCount, zodiac, username, type, sort, zodiacRec, loggedIn});
+
 });  
 
-
+/**
+ * Adds a crystal item to the user's session cart. If the item already exists in the cart,
+ * its quantity is incremented. If not, it is added with a quantity of 1.
+ * Responds with the updated total quantity of items in the cart.
+ */
 app.post('/cart/add/:id', (req, res) => {
     const crystalId = parseInt(req.params.id);
     if (!req.session.cart) req.session.cart = [];
@@ -474,6 +481,11 @@ app.post('/cart/add/:id', (req, res) => {
     res.json({ cartCount });
 });
 
+/**
+ * Removes one quantity of a specific item from the user's cart based on its ID.
+ * If the item's quantity reaches zero, it is removed completely from the cart.
+ * Responds with the updated total item count.
+ */
 app.post('/cart/remove/:id', (req, res) => {
     const idToRemove = parseInt(req.params.id);
     const cart = req.session.cart || [];
@@ -493,6 +505,11 @@ app.post('/cart/remove/:id', (req, res) => {
     res.json({ cartCount }); // respond with updated count
 });
 
+/**
+ * Displays the current contents of the user's shopping cart.
+ * Fetches item details from MongoDB and merges them with quantity info from session.
+ * Renders the 'checkout.ejs' template with the item list and total price.
+ */
 app.get('/cart', async (req, res) => {
     const db = await Connection.open(mongoUri, "aura");
     const cart = req.session.cart || [];
@@ -514,7 +531,11 @@ app.get('/cart', async (req, res) => {
     res.render('checkout.ejs', { items, total });
 });
 
-
+/**
+ * Finalizes the order by inserting a record into the 'orders' collection.
+ * If the cart is empty, redirects back to the cart page with an error flash message.
+ * Clears the session cart and renders the 'place_order.ejs' confirmation page.
+ */
 app.post('/cart/place-order', async (req, res) => {
     const db = await Connection.open(mongoUri, "aura");
 
